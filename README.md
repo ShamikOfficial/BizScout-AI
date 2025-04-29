@@ -7,7 +7,8 @@ A modular and extensible system for analyzing and recommending optimal business 
 ```
 ├── data/                  # Raw and processed data storage
 │   ├── raw/              # Original data from sources
-│   └── processed/        # Cleaned and transformed data
+│   ├── semi_processed/   # Semi-Processed data from sources
+│   └── processed/        # Final Cleaned and transformed data
 ├── loaders/              # Data loading modules
 │   ├── api_loader.py     # Foursquare API integration
 │   ├── csv_loader.py     # CSV data loading
@@ -18,8 +19,6 @@ A modular and extensible system for analyzing and recommending optimal business 
 ├── config/               # Configuration files
 │   ├── settings.py       # Main configuration
 │   └── api_keys.py       # API credentials (gitignored)
-├── utils/                # Utility functions
-│   └── helpers.py        # Helper functions
 ├── main.py               # Main driver script
 ├── requirements.txt      # Project dependencies
 └── README.md            # Project documentation
@@ -58,7 +57,6 @@ pip install -r requirements.txt
 
 Create a `config/api_keys.py` file with your API credentials:
 ```python
-FOURSQUARE_API_KEY = "your_api_key"
 YELP_API_KEY = "your_api_key"
 ```
 
