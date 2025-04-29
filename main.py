@@ -76,7 +76,7 @@ def clean_and_process_data(raw_data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
         logger.error(f"Error processing data: {str(e)}")
         raise
 
-def save_processed_data(data: pd.DataFrame, output_format: str = 'parquet') -> None:
+def save_processed_data(data: pd.DataFrame, output_format: str = 'parquet', output_location: str = 'processed_data', output_file_name: str ='processed_data') -> None:
     """
     Save processed data to disk.
     
@@ -84,11 +84,11 @@ def save_processed_data(data: pd.DataFrame, output_format: str = 'parquet') -> N
         data (pd.DataFrame): Processed data to save
         output_format (str): Format to save data in ('parquet' or 'csv')
     """
-    output_dir = Path(settings.OUTPUT['processed_data'])
+    output_dir = Path(settings.OUTPUT[output_location])
     output_dir.mkdir(parents=True, exist_ok=True)
     
     timestamp = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
-    output_path = output_dir / f"processed_data_{timestamp}"
+    output_path = output_dir / f"{output_file_name}_{timestamp}"
     
     try:
         if output_format == 'parquet':
@@ -113,15 +113,21 @@ def main():
         if not raw_data:
             logger.error("No data loaded from any source")
             return
-        print(raw_data)
+        for each_file in raw_data.keys():
+            save_processed_data(
+                raw_data[each_file],
+                output_format='csv',
+                output_location='semi_processed_data',
+                output_file_name=each_file
+            )
         # # Clean and process the data
-        processed_data = clean_and_process_data(raw_data)
+        # processed_data = clean_and_process_data(raw_data)
         
-        # Save the processed data
-        save_processed_data(
-            processed_data,
-            output_format=settings.PROCESSING['output_format']
-        )
+        # # Save the processed data
+        # save_processed_data(
+        #     processed_data,
+        #     output_format=settings.PROCESSING['output_format']
+        # )
         
         logger.info("Data processing completed successfully")
         

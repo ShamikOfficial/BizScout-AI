@@ -35,6 +35,7 @@ DEFAULT_LOCATION = {
 # Output settings
 OUTPUT = {
     'processed_data': 'data/processed/',
+    'semi_processed_data': 'data/semi_processed/',
     'reports': 'data/processed/reports/',
     'models': 'data/processed/models/'
 } 
