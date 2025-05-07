@@ -1,7 +1,6 @@
 """
-API keys and credentials configuration.
+API keys for various services.
 This file should not be committed to version control.
-Create a copy of this file named 'api_keys.py' and fill in your credentials.
 """
 
 # Foursquare API credentials

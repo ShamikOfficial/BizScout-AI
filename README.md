@@ -127,3 +127,8 @@ To update the requirements file with new dependencies:
 ```bash
 pip freeze > requirements.txt
 ```
+
+
+python main.py --mode analyze --category Mexican
+
+streamlit run streamlit_app.py
