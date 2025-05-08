@@ -15,3 +15,6 @@ shapely>=2.0.0
 contextily
 folium
 geopandas
+streamlit
+streamlit-folium
+plotly

@@ -43,56 +43,60 @@ def get_cluster_profiles(df: pd.DataFrame, target_category: str = None) -> pd.Da
 
     return cluster_stats.reset_index()
 
+from sklearn.preprocessing import MinMaxScaler
+
 def rank_clusters(cluster_df: pd.DataFrame, capital: str = 'Low', risk: str = 'Low') -> pd.DataFrame:
-    """
-    Rank clusters based on capital and risk profile.
-
-    Args:
-        cluster_df (pd.DataFrame): Cluster statistics
-        capital (str): 'Low' or 'High'
-        risk (str): 'Low' or 'High'
-
-    Returns:
-        pd.DataFrame: Scored and ranked clusters
-    """
     df = cluster_df.copy()
 
+    # Normalize key features to 0–1
+    features_to_normalize = ['total_footfall', 'avg_rating', 'avg_price', 'category_count']
+    scaler = MinMaxScaler()
+    df_norm = pd.DataFrame(scaler.fit_transform(df[features_to_normalize]), columns=features_to_normalize)
+
+    # Combine normalized features into the dataframe
+    for col in features_to_normalize:
+        df[f'norm_{col}'] = df_norm[col]
+
+    # Scoring logic with normalized values
     if capital == 'Low' and risk == 'Low':
-        # Low capital, low risk: Avoid high traffic, competition, and expensive areas
         df['score'] = (
-            -3.0 * df['category_count'] +  # Strong penalty for competition
-            -1.5 * df['total_footfall'] +  # Avoid crowded areas
-            -0.5 * df['avg_price']        # Avoid expensive locations
+            -3.0 * df['norm_category_count'] +
+            -2.0 * df['norm_total_footfall'] +
+            -1.0 * df['norm_avg_price'] +
+            1.0 * df['norm_avg_rating']
         )
 
     elif capital == 'Low' and risk == 'High':
-        # Low capital, high risk: Look for high traffic but avoid expensive, competitive areas
         df['score'] = (
-            +3.0 * df['total_footfall'] +    # High footfall
-            -2.5 * df['category_count'] +    # Avoid competition
-            -1.0 * df['avg_price'] +         # Avoid expensive areas
-            -1.5 * df['avg_rating']          # Compete with lower-rated businesses
+            2.0 * df['norm_total_footfall'] +
+            -2.5 * df['norm_avg_rating'] +
+            -1.5 * df['norm_category_count'] +
+            -1.0 * df['norm_avg_price']
+        )
+
+
+    elif capital == 'High' and risk == 'High':
+        df['score'] = (
+            3.0 * df['norm_total_footfall'] +
+            2.5 * df['norm_avg_rating'] +
+            1.5 * df['norm_category_count'] +
+            1.0 * df['norm_avg_price']
         )
 
     elif capital == 'High' and risk == 'Low':
-        # High capital, low risk: Focus on moderate footfall, low competition, and manageable prices
         df['score'] = (
-            -2.0 * df['category_count'] +    # Avoid high competition
-            +2.0 * df['total_footfall'] +    # Moderate footfall
-            -1.0 * df['avg_price'] +         # Prefer non-expensive
-            -0.5 * df['avg_rating']          # Less importance on high ratings
+            2.5 * df['norm_total_footfall'] +
+            -3.0 * df['norm_category_count'] +
+            1.5 * df['norm_avg_rating'] +
+            0.5 * df['norm_avg_price']
         )
 
-    elif capital == 'High' and risk == 'High':
-        # High capital, high risk: Focus on high footfall, high ratings, and tolerate competition
-        df['score'] = (
-            +3.5 * df['total_footfall'] +    # Maximize footfall
-            +2.5 * df['avg_rating'] +        # Maximize ratings
-            +1.5 * df['category_count'] +    # Tolerate competition
-            +1.0 * df['avg_price']           # Premium areas are ok
-        )
 
     return df.sort_values(by='score', ascending=False)
+
+
+
+
 
 
 def analyze_clusters(combined_data: pd.DataFrame, output_dir: Path, target_category: str = None) -> None:
@@ -117,10 +121,10 @@ def analyze_clusters(combined_data: pd.DataFrame, output_dir: Path, target_categ
     
     # Analyze for different business strategies
     strategies = [
-        ('Low Capital, Low Risk', 'Low', 'Low'),
-        ('High Capital, High Risk', 'High', 'High'),
-        ('Low Capital, High Risk', 'Low', 'High'),
-        ('High Capital, Low Risk', 'High', 'Low')
+        ('Low_Capital_Low_Risk', 'Low', 'Low'),
+        ('High_Capital_High_Risk', 'High', 'High'),
+        ('Low_Capital_High_Risk', 'Low', 'High'),
+        ('High_Capital_Low_Risk', 'High', 'Low')
     ]
     
     for strategy_name, capital, risk in strategies:
@@ -129,8 +133,7 @@ def analyze_clusters(combined_data: pd.DataFrame, output_dir: Path, target_categ
         logger.info(f"Top 5 clusters for {strategy_name}:")
         logger.info(ranked.head().to_string())
         
-        # Save results to final_output directory with category in filename
-        category_suffix = f"_{target_category.lower()}" if target_category else "_all"
-        output_file = output_dir / f'cluster_analysis{category_suffix}_{strategy_name.lower().replace(", ", "_")}_{pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        # Save results with simplified naming
+        output_file = output_dir / f'cluster_analysis_{strategy_name}.csv'
         ranked.to_csv(output_file, index=False)
         logger.info(f"Saved analysis to {output_file}") 
