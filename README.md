@@ -1,134 +1,124 @@
-# BizScout-AI: Geo-Intelligent Business Location Recommendation System
+# 🍽️ BizScout AI - Restaurant Location Analysis Tool
 
-A modular and extensible system for analyzing and recommending optimal business locations using multiple data sources.
+## 📋 Overview
+BizScout AI is an intelligent tool that helps entrepreneurs and business owners identify optimal locations for their restaurants. By analyzing various factors including demographics, competition, and market potential, it provides data-driven insights for informed decision-making.
 
-## Project Structure
+## ✨ Features
+- **Smart Location Analysis**: Identifies optimal locations based on multiple factors
+- **Risk-Capital Strategy**: Supports different investment strategies (High/Low Risk, High/Low Capital)
+- **Interactive Maps**: Visual representation of potential locations with heat maps
+- **Detailed Analytics**: Comprehensive analysis of location scores and distributions
+- **Category-Based Analysis**: Insights specific to different restaurant categories
 
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.8 or higher
+- pip (Python package installer)
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/bizscout-ai.git
+   cd bizscout-ai
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   # On Windows
+   venv\Scripts\activate
+   # On macOS/Linux
+   source venv/bin/activate
+   ```
+
+3. Install required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the Application
+1. Start the Streamlit app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+
+2. Open your browser and navigate to:
+   ```
+   http://localhost:8501
+   ```
+
+## 📊 Usage Guide
+
+### 1. Select Operation Mode
+- **Analyze Data**: Run analysis on existing data
+- **Process Data**: Process new data
+- **Process & Analyze**: Perform both operations
+
+### 2. Choose Restaurant Category
+Select from a list of standardized categories including:
+- Mexican, Italian, Chinese, Japanese
+- Fast Food, Pizza, Burgers
+- Cafes, Coffee & Tea
+- And more...
+
+### 3. Set Risk-Capital Strategy
+Choose your investment strategy:
+- **Risk Level**: High Risk or Low Risk
+- **Capital Level**: High Capital or Low Capital
+
+### 4. View Results
+The analysis provides:
+- Interactive map with location heatmap
+- Top location recommendations
+- Score distribution analysis
+- Category-based insights
+
+## 📁 Project Structure
 ```
-├── data/                  # Raw and processed data storage
-│   ├── raw/              # Original data from sources
-│   ├── semi_processed/   # Semi-Processed data from sources
-│   └── processed/        # Final Cleaned and transformed data
-├── loaders/              # Data loading modules
-│   ├── api_loader.py     # Foursquare API integration
-│   ├── csv_loader.py     # CSV data loading
-│   └── web_scraper.py    # Web scraping functionality
-├── cleaning/             # Data cleaning and transformation
-│   ├── data_cleaner.py   # Data cleaning utilities
-│   └── transformers.py   # Data transformation functions
-├── config/               # Configuration files
-│   ├── settings.py       # Main configuration
-│   └── api_keys.py       # API credentials (gitignored)
-├── main.py               # Main driver script
-├── requirements.txt      # Project dependencies
-└── README.md            # Project documentation
-```
-
-## Setup and Installation
-
-### 1. Create and Activate Virtual Environment
-
-#### Windows:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-.\venv\Scripts\activate
-```
-
-#### Linux/Mac:
-```bash
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-```
-
-### 2. Install Dependencies
-
-```bash
-# Install required packages
-pip install -r requirements.txt
-```
-
-### 3. Configure API Keys
-
-Create a `config/api_keys.py` file with your API credentials:
-```python
-YELP_API_KEY = "your_api_key"
-```
-
-## Maintainability and Extensibility
-
-### Modular Design
-- Each data source has its own loader module
-- Data cleaning is separated from data loading
-- Configuration is centralized and easily modifiable
-
-### Adapting to Changes
-1. **Data Source Changes**:
-   - Modify the corresponding loader module
-   - Update configuration in `config/settings.py`
-   - No changes needed in other modules
-
-2. **New Data Sources**:
-   - Create a new loader module in `loaders/`
-   - Add configuration in `config/settings.py`
-   - Integrate with existing cleaning pipeline
-
-## Usage
-
-1. Ensure your virtual environment is activated
-2. Run the main script:
-```bash
-python main.py
-```
-
-## Example Data Processing
-
-```python
-from loaders.api_loader import FoursquareLoader
-from loaders.csv_loader import CSVLoader
-from cleaning.data_cleaner import DataCleaner
-
-# Load data from Foursquare
-foursquare_data = FoursquareLoader().load_data()
-
-# Load CSV data
-csv_data = CSVLoader().load_data()
-
-# Clean and transform data
-cleaner = DataCleaner()
-processed_data = cleaner.clean_data(foursquare_data, csv_data)
+bizscout-ai/
+├── data/
+│   ├── raw/              # Raw data files
+│   ├── processed/        # Processed data
+│   └── final_output/     # Analysis results
+├── src/
+│   ├── data_processing/  # Data processing scripts
+│   └── analysis/         # Analysis scripts
+├── streamlit_app.py      # Main application
+├── requirements.txt      # Dependencies
+└── README.md            # Documentation
 ```
 
-## Dependencies
+## 🔧 Configuration
+The application can be configured through:
+- `config.yaml`: Main configuration file
+- Environment variables
+- Command-line arguments
 
-- Python 3.8+
-- pandas
-- requests
-- beautifulsoup4
-- selenium
-- python-dotenv
-- numpy
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-## Virtual Environment Management
+## 📝 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Deactivating the Virtual Environment
-When you're done working on the project, you can deactivate the virtual environment:
-```bash
-deactivate
-```
+## 👥 Authors
+- Your Name - Initial work
 
-### Updating Dependencies
-To update the requirements file with new dependencies:
-```bash
-pip freeze > requirements.txt
-```
+## 🙏 Acknowledgments
+- Thanks to all contributors
+- Special thanks to the open-source community
 
+## 📞 Support
+For support, please:
+- Open an issue in the repository
+- Contact the maintainers
+- Check the documentation
 
-python main.py --mode analyze --category Mexican
-
-streamlit run streamlit_app.py
+## 🔄 Updates
+- Latest update: [Date]
+- Version: 1.0.0
+- See [CHANGELOG.md](CHANGELOG.md) for full history
